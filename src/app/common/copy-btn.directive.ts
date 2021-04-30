@@ -19,7 +19,22 @@ export class CopyBtnDirective implements OnInit {
     elem.setAttribute('src', '');
     elem.setAttribute('alt', 'COPY');
     elem.setAttribute('title', 'Copy to clipboard');
+    elem.addEventListener('click', () => this.copyToClipboard())
     elem.parentElement.style.position = 'relative';
+  }
+
+  private copyToClipboard() {
+    const elem = document.querySelector(this.target || "");
+    if (elem) {
+      navigator.clipboard.writeText(elem.textContent)
+      .then(() => {
+        console.log("Text copied to clipboard");
+      }).catch(() => {
+        console.warn("Error occurred while copying to clipboard.");
+      });
+    } else {
+      console.warn("No element with the selector found. Selector: " + this.target);
+    }
   }
 
 }
