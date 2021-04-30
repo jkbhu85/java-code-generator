@@ -10,6 +10,7 @@ import { CopyBtnDirective } from './common/copy-btn.directive';
 import { ObjToPsComponent } from './jdbc/obj-to-ps.component';
 import { RsToObjComponent } from './jdbc/rs-to-obj.component';
 import { NotFoundComponent } from './common/not-found.component';
+import { AboutComponent } from './common/about.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NotFoundComponent } from './common/not-found.component';
     CopyBtnDirective,
     ObjToPsComponent,
     RsToObjComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AboutComponent
   ],
   imports: [
     FormsModule,
