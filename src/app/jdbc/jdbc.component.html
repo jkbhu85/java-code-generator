@@ -1,0 +1,25 @@
+<h2 class="mb-4 text-center" style="color: #880E4F;">JDBC Code Generator</h2>
+<div class="tabbed-content">
+  <ul class="tabs">
+    <li
+      class="tab-item"
+      [ngClass]="displayRsToObj ? 'tab-active' : ''"
+      (click)="showRsToObj()"
+    >
+      ResultSet to Object
+    </li>
+    <li
+      class="tab-item"
+      [ngClass]="!displayRsToObj ? 'tab-active' : ''"
+      (click)="showObjToPs()"
+    >
+      Object to PreparedStatement
+    </li>
+  </ul>
+  <div class="tab-content" id="rsToObjCode" [hidden]="!displayRsToObj">
+    <app-rs-to-obj></app-rs-to-obj>
+  </div>
+  <div class="tab-content" id="objToPsCode" [hidden]="displayRsToObj">
+    <app-obj-to-ps></app-obj-to-ps>
+  </div>
+</div>

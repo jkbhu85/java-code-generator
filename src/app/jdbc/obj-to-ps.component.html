@@ -1,0 +1,76 @@
+<h3 class="h4 mt-0 pt-0">PreparedStatement Code From Object</h3>
+<div class="row mt-4">
+  <div class="col-md-6 col-lg-4">
+    <div class="form-group">
+      <label class="form-label required">Object Identifier</label>
+      <input
+        type="text"
+        class="form-control font-mono"
+        [(ngModel)]="objToPs.objIdfName"
+      />
+      <div class="help-text text-danger" [hidden]="!objToPs.objIdfErrMsg">
+        {{ objToPs.objIdfErrMsg }}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label required">PreparedStatement Identifier</label>
+      <input
+        type="text"
+        class="form-control font-mono"
+        [(ngModel)]="objToPs.psIdfName"
+      />
+      <div class="help-text text-danger" [hidden]="!objToPs.psIdfErrMsg">
+        {{ objToPs.psIdfErrMsg }}
+      </div>
+    </div>
+    <div class="form-group mb-4">
+      <label class="form-label">Counter Identifier</label>
+      <input
+        type="text"
+        class="form-control font-mono"
+        [(ngModel)]="objToPs.counterIdfName"
+      />
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <button class="btn btn-primary btn-block" (click)="onObjToPsCode()">
+          Generate Code
+        </button>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-secondary btn-block">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-8">
+    <div class="form-group">
+      <label class="form-label required">Class Fields</label>
+      <textarea
+        rows="7"
+        class="form-control font-mono"
+        [(ngModel)]="objToPs.classFields"
+        spellcheck="off"
+      ></textarea>
+      <div class="help-text text-danger" [hidden]="!objToPs.classFieldsErrMsg">
+        {{ objToPs.classFieldsErrMsg }}
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-12">
+    <div class="mb-3">Generated code:</div>
+    <div class="java-code-wrapper">
+      <img
+        [appCopyBtn]="'#objToPsGeneratedCode'"
+        [hidden]="!objToPs.generatedCode"
+      />
+      <pre id="objToPsGeneratedCode" class="java-code">{{
+        objToPs.generatedCode
+      }}</pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<h2 class="h4 mt-0 pt-0 mb-4">Object Code From ResultSet</h2>
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group">
+          <label class="form-label required">Object Identifier</label>
+          <input
+            type="text"
+            class="form-control font-mono"
+            [(ngModel)]="rsToObj.objIdfName"
+          />
+          <div class="help-text text-danger" [hidden]="!rsToObj.objIdfErrMsg">
+            {{ rsToObj.objIdfErrMsg }}
+          </div>
+        </div>
+        <div class="form-group mb-4">
+          <label class="form-label required">ResultSet Identifier</label>
+          <input
+            type="text"
+            class="form-control font-mono"
+            [(ngModel)]="rsToObj.rsIdfName"
+          />
+          <div class="help-text text-danger" [hidden]="!rsToObj.rsIdfErrMsg">
+            {{ rsToObj.rsIdfErrMsg }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+            <button
+              class="btn btn-primary btn-block"
+              type="button"
+              (click)="onRsToObjCode()"
+            >
+              Generate Code
+            </button>
+          </div>
+          <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+            <button class="btn btn-secondary btn-block" type="reset">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-8">
+        <div class="form-group">
+          <label class="form-label required">Class Fields</label>
+          <textarea
+            rows="7"
+            class="form-control font-mono"
+            [(ngModel)]="rsToObj.classFields"
+            spellcheck="off"
+          ></textarea>
+          <div
+            class="help-text text-danger"
+            [hidden]="!rsToObj.classFieldsErrMsg"
+          >
+            {{ rsToObj.classFieldsErrMsg }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-12">
+    <div class="mb-3">Generated code:</div>
+    <div class="java-code-wrapper">
+      <img
+        [appCopyBtn]="'#rsToObjGeneratedCode'"
+        [hidden]="!rsToObj.generatedCode"
+      />
+      <pre id="rsToObjGeneratedCode" class="java-code">{{
+        rsToObj.generatedCode
+      }}</pre>
+    </div>
+  </div>
+</div>

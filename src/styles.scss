@@ -1,0 +1,88 @@
+body {
+  overflow-y: scroll;
+}
+[hidden] {
+  display: none !important;
+}
+.icon {
+  font-size: 1rem;
+  color: #666;
+}
+.btn-copy {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+.form-group {
+  margin-bottom: .75rem;
+}
+.btn-block {
+  width: 100%;
+}
+.java-code {
+  background: #fff7ee;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: .25rem;
+}
+.tabs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 2px solid #880E4F;
+}
+.tab-item {
+  display: inline-block;
+  padding: .5rem 1rem;
+  cursor: pointer;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  color: #880E4F;
+  font-weight: 500;
+}
+.tab-item + .tab-item {
+  margin-left: 2px;
+}
+.tab-item:hover {
+  background-color: #880E4F;
+  color: var(--bs-light);
+  font-weight: 400;
+}
+.tab-active {
+  background-color: #880E4F;
+  color: var(--bs-light);
+  font-weight: 400;
+}
+.tab-content {
+  padding: 1rem;
+}
+code, pre, .font-mono {
+  font-family: 'Fira Mono';
+}
+.xcard {
+  display: flex;
+  justify-content: center;
+}
+.xcard a {
+  display: block;
+  width: 16rem;
+  line-height: 8rem;
+  font-size: 2rem;
+  color: #222;
+  text-decoration: none;
+  box-shadow: 0 0 .5rem #aaa;
+  text-align: center;
+  border-radius: .25rem;
+}
+.xcard a:hover {
+  box-shadow: 0 0 .25rem #ddd;
+}
+a.xcard-jdbc {
+  background-color: #880E4F;
+  color: #FCE4EC;
+  font-weight: 500;
+}
+a.xcard-jdbc:hover {
+  color: #FCE4EC;
+}
