@@ -41,7 +41,8 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/server.js"
             ],
             "styles": [
               "src/styles.scss",

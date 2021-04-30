@@ -16,7 +16,7 @@ export class CopyBtnDirective implements OnInit {
       throw `'appCopyBtn' can only be applied to an 'img' element. Actual element: ${elem.tagName}`;
     }
     elem.classList.add(...['icon', 'btn-copy']);
-    elem.setAttribute('src', '');
+    elem.setAttribute('src', '/assets/copy.png');
     elem.setAttribute('alt', 'COPY');
     elem.setAttribute('title', 'Copy to clipboard');
     elem.addEventListener('click', () => this.copyToClipboard())

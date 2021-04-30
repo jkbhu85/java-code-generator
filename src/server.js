@@ -4,7 +4,7 @@ const compression = require("compression");
 const serveStatic = require("serve-static");
 
 const port = process.env.PORT || 8080;
-const appFolder = "dist/java-code-generator";
+const appFolder = "";
 
 app = express();
 app.use(compression());
