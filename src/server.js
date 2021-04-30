@@ -4,14 +4,13 @@ const compression = require("compression");
 const serveStatic = require("serve-static");
 
 const port = process.env.PORT || 8080;
-const appFolder = "";
 
 app = express();
 app.use(compression());
-app.use(serveStatic(__dirname + "/" + appFolder));
+app.use(serveStatic(__dirname + "/" ));
 
 app.all("*", function (req, res) {
-  res.status(200).sendFile(`/`, { root: appFolder });
+  res.status(200).sendFile(`${__dirname}/index.html`);
 });
 
 app.listen(port);

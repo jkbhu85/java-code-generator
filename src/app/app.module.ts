@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CopyBtnDirective } from './common/copy-btn.directive';
 import { ObjToPsComponent } from './jdbc/obj-to-ps.component';
 import { RsToObjComponent } from './jdbc/rs-to-obj.component';
+import { NotFoundComponent } from './common/not-found.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { RsToObjComponent } from './jdbc/rs-to-obj.component';
     HomeComponent,
     CopyBtnDirective,
     ObjToPsComponent,
-    RsToObjComponent
+    RsToObjComponent,
+    NotFoundComponent
   ],
   imports: [
     FormsModule,
