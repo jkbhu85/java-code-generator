@@ -292,6 +292,7 @@ class ObjectToPsCodeGenerater {
     generateCode(req: ObjToPsRequest, parser: CodeParser): string {
         const keywords: Keyword[] = parser.parse(req.fields);
         const strArr = [];
+        if (req.counterIdf) strArr.push("int col = 1;\n");
 
         for (let i = 0; i < keywords.length; i++) {
             const kw = keywords[i];
