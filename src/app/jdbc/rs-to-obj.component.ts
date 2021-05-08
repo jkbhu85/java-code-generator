@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
-import { generateRsToObjCode } from './jdbc-code-generator';
+import { generateRsToObjCode, ColumnCase, ColumnNameSpec, DEFAULT_COLUMN_SPEC } from './jdbc-code-generator';
 
 @Component({
   selector: 'app-rs-to-obj',
@@ -8,20 +9,59 @@ import { generateRsToObjCode } from './jdbc-code-generator';
   styles: [],
 })
 export class RsToObjComponent implements OnInit {
+
   rsToObj = {
-    rsIdfName: 'rs',
-    objIdfName: 'obj',
-    classFields: '',
-    rsIdfErrMsg: '',
-    objIdfErrMsg: '',
-    classFieldsErrMsg: '',
     generatedCode: '',
   };
 
-  constructor() {}
+  form: FormGroup;
+
+  constructor(fb: FormBuilder) {
+    this.form = fb.group({
+      rsIdfName: ['rs', Validators.required],
+      objIdfName: ['obj', Validators.required],
+      classFields: ['', Validators.required],
+      generateColName: [true],
+      colNameAsField: ['N'],
+      separator: ['_'],
+      colNameCase: ['U', Validators.required]
+    }, {
+      validators: [
+        FormValidators.separatorValidator('colNameAsField', 'separator')
+      ]
+    });
+  }
+
+  get rsIdfName(): AbstractControl {
+    return this.form.get('rsIdfName');
+  }
+
+  get objIdfName(): AbstractControl {
+    return this.form.get('objIdfName');
+  }
+
+  get classFields(): AbstractControl {
+    return this.form.get('classFields');
+  }
+
+  get generateColName(): AbstractControl {
+    return this.form.get('generateColName');
+  }
+
+  get colNameAsField(): AbstractControl {
+    return this.form.get('colNameAsField');
+  }
+
+  get colNameCase(): AbstractControl {
+    return this.form.get('colNameCase');
+  }
+
+  get separator(): AbstractControl {
+    return this.form.get('separator');
+  }
 
   ngOnInit(): void {
-    this.rsToObj.classFields = `$$
+    this.classFields.setValue(`$$
     private boolean valid;
     private long id;
     private String name;
@@ -29,37 +69,55 @@ export class RsToObjComponent implements OnInit {
     private LocalDate startDate;
     private Double rate;`
       .replace('$$\n', '')
-      .replace(/  +/g, '');
-      this.onRsToObjCode();
+      .replace(/  +/g, ''));
+    this.onRsToObjCode();
   }
-  private isRsToObjValid(): boolean {
-    let valid = true;
-    this.rsToObj.classFieldsErrMsg = '';
-    this.rsToObj.objIdfErrMsg = '';
-    this.rsToObj.rsIdfErrMsg = '';
 
-    if (!this.rsToObj.rsIdfName) {
-      this.rsToObj.rsIdfErrMsg = 'ResultSet identifier is required.';
-      valid = false;
+  private getColumnNameSpec(): ColumnNameSpec {
+    const spec = Object.assign({}, DEFAULT_COLUMN_SPEC);
+    spec.generateColumnNames = this.generateColName.value;
+    if (this.generateColName.value) {
+      spec.useSeparator = (this.colNameAsField.value === 'N');
+
+      if (this.colNameAsField.value === 'N') {
+        spec.separator = this.separator.value;
+      }
+      spec.columnCase = this.colNameCase.value;
     }
-    if (!this.rsToObj.objIdfName) {
-      this.rsToObj.objIdfErrMsg = 'Object identifier is required.';
-      valid = false;
-    }
-    if (!this.rsToObj.classFields) {
-      this.rsToObj.classFieldsErrMsg = 'Class fields are required.';
-      valid = false;
-    }
-    return valid;
+    return spec;
   }
 
   onRsToObjCode(): void {
-    if (this.isRsToObjValid()) {
+    if (this.form.valid) {
       this.rsToObj.generatedCode = generateRsToObjCode({
-        objIdf: this.rsToObj.objIdfName,
-        rsIdf: this.rsToObj.rsIdfName,
-        fields: this.rsToObj.classFields,
-      });
+        objIdf: this.objIdfName.value,
+        rsIdf: this.rsIdfName.value,
+        fields: this.classFields.value,
+      }, this.getColumnNameSpec());
     }
   }
 }
+
+const FormValidators = {
+  separatorValidator: function _confirmPasswordValidator(
+    sameAsFieldCtrlName: string,
+    separatorCtrlName: string
+  ): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const sameAsFieldCtrl = formGroup.get(sameAsFieldCtrlName);
+      const separatorCtrl = formGroup.get(separatorCtrlName);
+
+      if (!sameAsFieldCtrl || !separatorCtrl) {
+        return null;
+      }
+
+      if (sameAsFieldCtrl.value === 'N' && !separatorCtrl.value) {
+        if (!separatorCtrl.invalid) {
+          separatorCtrl.setErrors({ required: true });
+        }
+        return { required: true };
+      }
+      return null;
+    };
+  },
+};
