@@ -1,17 +1,24 @@
 <h2 class="h4 mt-0 pt-0 mb-4">Object Code From ResultSet</h2>
 <div class="row">
   <div class="col-12">
-    <div class="row">
-      <div class="col-md-6 col-lg-4">
+    <div class="row" [formGroup]="form">
+      <div class="col-md-6 col-lg-6">
         <div class="form-group">
           <label class="form-label required">Object Identifier</label>
           <input
             type="text"
             class="form-control font-mono"
-            [(ngModel)]="rsToObj.objIdfName"
+            formControlName="objIdfName"
           />
-          <div class="help-text text-danger" [hidden]="!rsToObj.objIdfErrMsg">
-            {{ rsToObj.objIdfErrMsg }}
+          <div
+            class="help-text text-danger"
+            *ngIf="
+              objIdfName.invalid && (objIdfName.dirty || objIdfName.touched)
+            "
+          >
+            <span *ngIf="objIdfName.errors['required']"
+              >Object identifier is required.</span
+            >
           </div>
         </div>
         <div class="form-group mb-4">
@@ -19,10 +26,127 @@
           <input
             type="text"
             class="form-control font-mono"
-            [(ngModel)]="rsToObj.rsIdfName"
+            formControlName="rsIdfName"
           />
-          <div class="help-text text-danger" [hidden]="!rsToObj.rsIdfErrMsg">
-            {{ rsToObj.rsIdfErrMsg }}
+          <div
+            class="help-text text-danger"
+            *ngIf="rsIdfName.invalid && (rsIdfName.dirty || rsIdfName.touched)"
+          >
+            <span *ngIf="rsIdfName.errors['required']"
+              >ResultSet identifier is required.</span
+            >
+          </div>
+        </div>
+        <div class="form-group mb-4">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="generateColumnNames"
+              formControlName="generateColName"
+            />
+            <label class="form-check-label" for="generateColumnNames"
+              >Generate column names</label
+            >
+          </div>
+        </div>
+        <div class="form-group mb-4" [hidden]="!generateColName.value">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              value="Y"
+              id="colNameAsFieldYes"
+              name="colNameAsField"
+              formControlName="colNameAsField"
+            />
+            <label class="form-check-label" for="colNameAsFieldYes">
+              Column name same as field name
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              value="N"
+              id="colNameAsFieldNo"
+              name="colNameAsField"
+              formControlName="colNameAsField"
+            />
+            <label class="form-check-label" for="colNameAsFieldNo">
+              Use a separator
+            </label>
+          </div>
+
+          <div
+            class="required mt-3"
+            [hidden]="!(generateColName.value && colNameAsField.value === 'N')"
+          >
+            <input
+              type="text"
+              class="form-control font-mono"
+              formControlName="separator"
+            />
+            <div
+              class="help-text text-danger"
+              *ngIf="
+                separator.invalid && (separator.dirty || separator.touched)
+              "
+            >
+              <span *ngIf="separator.errors['required']"
+                >Separator is required.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="form-group mb-4" [hidden]="!generateColName.value">
+          <div class="row">
+            <div class="col-12 mb-2">Column name case</div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="colNameCaseUppercase"
+                  value="U"
+                  name="colNameCase"
+                  formControlName="colNameCase"
+                />
+                <label class="form-check-label" for="colNameCaseUppercase">
+                  Uppercase
+                </label>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="colNameCaseLowercase"
+                  value="L"
+                  name="colNameCase"
+                  formControlName="colNameCase"
+                />
+                <label class="form-check-label" for="colNameCaseLowercase">
+                  Lowercase
+                </label>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="colNameCaseNoCase"
+                  value="S"
+                  name="colNameCase"
+                  formControlName="colNameCase"
+                />
+                <label class="form-check-label" for="colNameCaseNoCase">
+                  Keep as it is
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -42,20 +166,24 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-8">
+      <div class="col-md-6 col-lg-6">
         <div class="form-group">
           <label class="form-label required">Class Fields</label>
           <textarea
             rows="7"
             class="form-control font-mono"
-            [(ngModel)]="rsToObj.classFields"
+            formControlName="classFields"
             spellcheck="off"
           ></textarea>
           <div
             class="help-text text-danger"
-            [hidden]="!rsToObj.classFieldsErrMsg"
+            *ngIf="
+              classFields.invalid && (classFields.dirty || classFields.touched)
+            "
           >
-            {{ rsToObj.classFieldsErrMsg }}
+            <span *ngIf="classFields.errors['required']"
+              >Class fields are required.</span
+            >
           </div>
         </div>
       </div>

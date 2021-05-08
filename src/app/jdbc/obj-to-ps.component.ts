@@ -12,7 +12,7 @@ export class ObjToPsComponent implements OnInit {
   objToPs = {
     psIdfName: 'ps',
     objIdfName: 'obj',
-    counterIdfName: '',
+    counterIdfName: 'col',
     classFields: '',
     psIdfErrMsg: '',
     objIdfErrMsg: '',
