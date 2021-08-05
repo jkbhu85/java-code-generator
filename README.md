@@ -1,4 +1,7 @@
 # Java Code Generator
+
+[![Codeship Status for optimus29/java-code-generator](https://app.codeship.com/projects/cb6d8203-0dfc-4ecb-bdc6-96aed94ff255/status?branch=master)](https://app.codeship.com/projects/450059)
+
 Generate boiler plate Java code. Currently the code can be generated for the following purposes:
 - Object creation from ResultSet in JDBC
 - PreparedStatement creation from object in JDBC
