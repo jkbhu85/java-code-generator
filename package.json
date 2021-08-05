@@ -1,6 +1,6 @@
 {
   "name": "java-code-generator",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "node dist/java-code-generator/server.js",
