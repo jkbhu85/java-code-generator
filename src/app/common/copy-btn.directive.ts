@@ -1,4 +1,5 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { NotificationService } from '../notification/noti-provider.service';
 
 @Directive({
   selector: '[appCopyBtn]'
@@ -7,7 +8,7 @@ export class CopyBtnDirective implements OnInit {
 
   @Input("appCopyBtn") target: string;
 
-  constructor(private eleRef: ElementRef) {
+  constructor(private eleRef: ElementRef, private notiService: NotificationService) {
   }
 
   ngOnInit() {
@@ -28,8 +29,10 @@ export class CopyBtnDirective implements OnInit {
     if (elem) {
       navigator.clipboard.writeText(elem.textContent)
       .then(() => {
+        this.notiService.info(null, "Text copied to clipboard.");
         console.log("Text copied to clipboard");
       }).catch(() => {
+        this.notiService.error(null, "Error occurred while copying to clipboard.");
         console.warn("Error occurred while copying to clipboard.");
       });
     } else {
