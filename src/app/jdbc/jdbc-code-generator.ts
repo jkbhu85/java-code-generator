@@ -1,4 +1,5 @@
 const PATTERN_SPACE = /\s+/;
+const PATTERN_JAVA_IDF = /^([_a-zA-Z])[_a-zA-Z1-9]*$/;
 
 interface TypeSpec {
   name: string;
@@ -199,6 +200,13 @@ interface CodeParser {
   parse(javaCode: String): Keyword[];
 }
 
+interface JavaField {
+  readonly type: string;
+  readonly fieldName: string;
+  readonly staticFlag: boolean;
+  readonly transientFlag: boolean;
+}
+
 class JavaCodeParser implements CodeParser {
   private typeNames: string[] = [];
 
@@ -220,6 +228,26 @@ class JavaCodeParser implements CodeParser {
 
   public parse(javaCode: string): Keyword[] {
     const kws: Keyword[] = [];
+    const fields = this.findFields(javaCode);
+
+    for (let i = 0; i < fields.length; i++) {
+      let typeSpec = this.getTypeSpec(fields[i].type);
+
+      if (!typeSpec && this.handleUnknownType) {
+        typeSpec = { name: fields[i].type, unknownType: true };
+      }
+
+      if (typeSpec) {
+        const kw = { identifier: fields[i].fieldName, type: typeSpec };
+        kws.push(kw);
+      }
+    }
+
+    return kws;
+  }
+
+  public parseOld(javaCode: string): Keyword[] {
+    const kws: Keyword[] = [];
     const lines = trim(javaCode).split(';');
 
     for (let i = 0; i < lines.length; i++) {
@@ -229,12 +257,7 @@ class JavaCodeParser implements CodeParser {
       const name = words[idfIdx];
       let typeSpec = this.getTypeSpec(words[typeNameIdx]);
 
-      if (
-        !typeSpec &&
-        this.handleUnknownType &&
-        this.handleUnknownType === true &&
-        name
-      ) {
+      if (!typeSpec && this.handleUnknownType && name) {
         typeSpec = { name: words[typeNameIdx], unknownType: true };
       }
 
@@ -245,6 +268,70 @@ class JavaCodeParser implements CodeParser {
     }
 
     return kws;
+  }
+
+  private findFields(javaCode: string): JavaField[] {
+    const fieldCode = javaCode.split(';');
+    const typeFieldMap = new Map<string, JavaField>();
+
+    for (let fc of fieldCode) {
+      const code = fc.trim();
+      if (code === '') continue;
+      const field = this.parseField(code);
+      if (field != null) {
+        if (typeFieldMap.has(field.fieldName))
+          throw new Error("Duplicate field name: " + field.fieldName);
+        if (field.staticFlag || field.transientFlag) {
+          console.log(`Static or transient field. Skipping field: ${field.fieldName}`);
+          continue;
+        }
+        typeFieldMap.set(field.fieldName, field);
+        // console.log('field', field);
+      }
+    }
+    const fields = [];
+    typeFieldMap.forEach((f) => fields.push(f));
+    return fields;
+  }
+
+  /**
+   * Returns field by parsing the specified code snippet.
+   * If the code snippet is a blank string then a `null` is returned.
+   *
+   * @param codeSnippet the specified code snipped
+   * @returns a field or `null`
+   * @throws {Error} if the code snipped does not contain two valid Java identifiers
+   */
+  private parseField(codeSnippet: string): JavaField {
+    if (!codeSnippet || codeSnippet.trim() === "") return null;
+
+    const tokens = [];
+    let arr = codeSnippet.split(/\s/);
+    for (let i = arr.length - 1; i > -1 && tokens.length < 6; i--) {
+      if (arr[i]) tokens.push(arr[i]);
+    }
+    if (tokens.length < 2) {
+      throw new Error(`Error near the code '${codeSnippet}'. Either type name or field name is missing.`);
+    } else if (!PATTERN_JAVA_IDF.test(tokens[0])) {
+      throw new Error(`Error near the code '${codeSnippet}'. Field name is not a valid identifier.`);
+    } else if (!PATTERN_JAVA_IDF.test(tokens[1])) {
+      throw new Error(`Error near the code '${codeSnippet}'. Type name is not a valid identifier.`);
+    }
+
+    let transientFlag = false;
+    let staticFlag = false;
+    if (tokens.length > 2) {
+      for (let i = 2; i < tokens.length; i++) {
+        if (tokens[i] === 'static') staticFlag = true;
+        if (tokens[i] === 'transient') transientFlag = true;
+      }
+    }
+    return {
+      fieldName: tokens[0],
+      type: tokens[1],
+      staticFlag: staticFlag,
+      transientFlag: transientFlag
+    };
   }
 
   private getTypeSpec(type: string): TypeSpec {
@@ -435,7 +522,7 @@ class ColumnNameGenerator {
     return ch === '_';
   }
 
-  getWords(fieldName): string[] {
+  getWords(fieldName: string): string[] {
     const words = [];
     let word = [];
     let lastCharUpperCase = false;

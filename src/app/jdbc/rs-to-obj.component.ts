@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 
-import { generateRsToObjCode, ColumnCase, ColumnNameSpec, DEFAULT_COLUMN_SPEC } from './jdbc-code-generator';
+import {
+  generateRsToObjCode,
+  ColumnNameSpec,
+  DEFAULT_COLUMN_SPEC,
+} from './jdbc-code-generator';
 
 @Component({
   selector: 'app-rs-to-obj',
@@ -9,7 +20,6 @@ import { generateRsToObjCode, ColumnCase, ColumnNameSpec, DEFAULT_COLUMN_SPEC } 
   styles: [],
 })
 export class RsToObjComponent implements OnInit {
-
   rsToObj = {
     generatedCode: '',
   };
@@ -17,19 +27,22 @@ export class RsToObjComponent implements OnInit {
   form: FormGroup;
 
   constructor(fb: FormBuilder) {
-    this.form = fb.group({
-      rsIdfName: ['rs', Validators.required],
-      objIdfName: ['obj', Validators.required],
-      classFields: ['', Validators.required],
-      generateColName: [true],
-      colNameAsField: ['N'],
-      separator: ['_'],
-      colNameCase: ['U', Validators.required]
-    }, {
-      validators: [
-        FormValidators.separatorValidator('colNameAsField', 'separator')
-      ]
-    });
+    this.form = fb.group(
+      {
+        rsIdfName: ['rs', Validators.required],
+        objIdfName: ['obj', Validators.required],
+        classFields: ['', Validators.required],
+        generateColName: [true],
+        colNameAsField: ['N'],
+        separator: ['_'],
+        colNameCase: ['U', Validators.required],
+      },
+      {
+        validators: [
+          FormValidators.separatorValidator('colNameAsField', 'separator'),
+        ],
+      }
+    );
   }
 
   get rsIdfName(): AbstractControl {
@@ -61,15 +74,17 @@ export class RsToObjComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.classFields.setValue(`$$
+    this.classFields.setValue(
+      `$$
     private boolean valid;
     private long id;
     private String name;
     private double salary;
     private LocalDate startDate;
     private Double rate;`
-      .replace('$$\n', '')
-      .replace(/  +/g, ''));
+        .replace('$$\n', '')
+        .replace(/  +/g, '')
+    );
     this.onRsToObjCode();
   }
 
@@ -77,7 +92,7 @@ export class RsToObjComponent implements OnInit {
     const spec = Object.assign({}, DEFAULT_COLUMN_SPEC);
     spec.generateColumnNames = this.generateColName.value;
     if (this.generateColName.value) {
-      spec.useSeparator = (this.colNameAsField.value === 'N');
+      spec.useSeparator = this.colNameAsField.value === 'N';
 
       if (this.colNameAsField.value === 'N') {
         spec.separator = this.separator.value;
@@ -89,11 +104,14 @@ export class RsToObjComponent implements OnInit {
 
   onRsToObjCode(): void {
     if (this.form.valid) {
-      this.rsToObj.generatedCode = generateRsToObjCode({
-        objIdf: this.objIdfName.value,
-        rsIdf: this.rsIdfName.value,
-        fields: this.classFields.value,
-      }, this.getColumnNameSpec());
+      this.rsToObj.generatedCode = generateRsToObjCode(
+        {
+          objIdf: this.objIdfName.value,
+          rsIdf: this.rsIdfName.value,
+          fields: this.classFields.value,
+        },
+        this.getColumnNameSpec()
+      );
     }
   }
 }

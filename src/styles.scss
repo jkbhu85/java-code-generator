@@ -88,3 +88,15 @@ a.xcard-jdbc {
 a.xcard-jdbc:hover {
   color: #FCE4EC;
 }
+.jcg-noti {
+  border-radius: .25rem;
+}
+.jcg-noti-info {
+  background-color: var(--bs-info);
+}
+.jcg-noti-warn {
+  background-color: var(--bs-warning);
+}
+.jcg-noti-error {
+  background-color: var(--bs-danger);
+}

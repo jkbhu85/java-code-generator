@@ -11,6 +11,7 @@ import { ObjToPsComponent } from './jdbc/obj-to-ps.component';
 import { RsToObjComponent } from './jdbc/rs-to-obj.component';
 import { NotFoundComponent } from './common/not-found.component';
 import { AboutComponent } from './common/about.component';
+import { NotificationModule } from './notification/notification.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AboutComponent } from './common/about.component';
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    NotificationModule,
     BrowserModule,
     AppRoutingModule
   ],
